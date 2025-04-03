@@ -17,3 +17,8 @@ def get_response(url):
 	response = requests.get(url)
 	return response.text
 
+def get_price(html):
+	soup = BeautifulSoup(html, "lxml")
+	el = soup.select_one(".sale-price")
+	price = Price.fromstring(el.text)
+	return price.amount_float
