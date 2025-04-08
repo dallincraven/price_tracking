@@ -7,7 +7,6 @@ from price_parser import Price
 PRODUCT_URL_CSV = "products.csv"
 SAVE_TO_CSV = True
 PRICES_CSV = "prices.csv"
-SEND_MAIL = True
 
 def process_products(df):
     updated_products = []
@@ -28,3 +27,13 @@ def get_price(html):
 	elm = el["content"]
 	price = float(elm)
 	return price
+
+def main():
+    df = get_urls(PRODUCT_URL_CSV)
+    df_updated = process_products(df)
+    if SAVE_TO_CSV:
+        df_updated.to_csv(PRICES_CSV, index=False, mode="a")
+        
+if __name__ == "__main__":
+    main()
+    
