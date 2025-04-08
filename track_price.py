@@ -10,8 +10,13 @@ PRICES_CSV = "prices.csv"
 SEND_MAIL = True
 
 def process_products(df):
-	for product in df.to_dict("records"):
-		# product["url"] is the URL
+    updated_products = []
+    for product in df.to_dict("records"):
+        html = get_response(product["url"])
+        product["price"] = get_price(html)
+        product["alert"] = product["price"] < product["alert_price"]
+        updated_products.append(product)
+    return pd.DataFrame(updated_products)
 
 def get_response(url):
 	response = requests.get(url)
@@ -19,6 +24,7 @@ def get_response(url):
 
 def get_price(html):
 	soup = BeautifulSoup(html, "lxml")
-	el = soup.select_one(".sale-price")
-	price = Price.fromstring(el.text)
-	return price.amount_float
+	el = soup.find(property="product:price:amount")
+	elm = el["content"]
+	price = float(elm)
+	return price
