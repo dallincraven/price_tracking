@@ -8,6 +8,10 @@ PRODUCT_URL_CSV = "products.csv"
 SAVE_TO_CSV = True
 PRICES_CSV = "prices.csv"
 
+def get_urls(csv_file):
+    df = pd.read_csv(csv_file)
+    return df
+
 def process_products(df):
     updated_products = []
     for product in df.to_dict("records"):
